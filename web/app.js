@@ -9,8 +9,6 @@ const NUMEROS = [
   ["cintura_cm", 50, 180, false],
   ["peso_kg", 30, 250, true],
   ["glucosa", 10, 700, true],
-  ["tas", 60, 300, true],
-  ["tad", 30, 200, true],
 ];
 const SI_NO = { s: true, n: false };
 
@@ -99,6 +97,13 @@ for (const deslizador of form.querySelectorAll('input[type="range"]')) {
   });
 }
 
+// La diagonal de la presión se pone sola: la alta tiene 3 dígitos si empieza con 1, 2 o 3 (100-300) y 2 si no.
+$("presion").addEventListener("input", (evento) => {
+  const digitos = evento.target.value.replace(/\D/g, "").slice(0, 6);
+  const n = digitos[0] <= "3" ? 3 : 2;
+  evento.target.value = digitos.length > n ? `${digitos.slice(0, n)}/${digitos.slice(n)}` : digitos;
+});
+
 // --------------------------------------------------------------------
 // Lectura y validación
 // --------------------------------------------------------------------
@@ -122,6 +127,18 @@ function leerNumero(nombre, minimo, maximo, opcional) {
     return undefined;
   }
   return n;
+}
+
+/** Presión en un solo campo, "120/70". Devuelve [sistólica, diastólica]; vacío = no se midió. */
+function leerPresion() {
+  const texto = form.elements.presion.value.trim();
+  if (texto === "") return [null, null];
+  const [, tas, tad] = (texto.match(/^(\d{2,3})\/(\d{2,3})$/) ?? []).map(Number);
+  if (!(tas >= 60 && tas <= 300 && tad >= 30 && tad <= 200)) {
+    marcarError("presion", "Escriba la presión como 120/70 (alta de 60 a 300, baja de 30 a 200), o déjela vacía.");
+    return [undefined, undefined];
+  }
+  return [tas, tad];
 }
 
 function leerOpcion(nombre, opciones) {
@@ -150,8 +167,7 @@ function leerRespuestas() {
   r.peso_kg = num.peso_kg;
   r.glucosa = num.glucosa;
   if (r.glucosa != null) r.en_ayuno = leerOpcion("en_ayuno", SI_NO);
-  r.tas = num.tas;
-  r.tad = num.tad;
+  [r.tas, r.tad] = leerPresion();
   r.sintomas_alarma = leerOpcion("sintomas_alarma", SI_NO);
   r.c1_familiar_diabetes = leerOpcion("c1_familiar_diabetes");
   if (r.mujer) r.c3_diabetes_gestacional = leerOpcion("c3_diabetes_gestacional");

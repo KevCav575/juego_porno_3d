@@ -157,8 +157,6 @@ progress::-moz-progress-bar { background: var(--primario); border-radius: 999px;
 .paso > :last-child { margin-bottom: 0; }
 .campo > label, legend { display: block; font-size: .875rem; font-weight: 600; letter-spacing: .01em; margin-bottom: 8px; padding: 0; }
 fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
-.dos-columnas { display: grid; gap: 0 24px; }
-.dos-columnas + .nota { margin: -18px 0 24px; }
 #lista-sintomas { margin: 0 0 12px; padding-left: 36px; font-size: .9rem; }
 
 input[type="text"] {
@@ -249,7 +247,6 @@ input[type="text"]:focus { outline: 0; border-color: var(--primario); box-shadow
 @media (min-width: 640px) {
   .tarjeta.principal { padding: 40px; }
   .confianza { grid-template-columns: repeat(3, 1fr); }
-  .dos-columnas { grid-template-columns: 1fr 1fr; }
   .resultado-rejilla { grid-template-columns: 1fr 1fr; }
 }
 @media (min-width: 1024px) {

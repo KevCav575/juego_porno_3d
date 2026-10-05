@@ -157,17 +157,11 @@
               <label><input type="radio" name="en_ayuno" value="n"><span>No</span></label>
             </div>
           </fieldset>
-          <div class="dos-columnas">
-            <div class="campo" data-campo="tas">
-              <label for="tas">Presión SISTÓLICA (la alta, mmHg)</label>
-              <input type="text" inputmode="decimal" id="tas" name="tas">
-            </div>
-            <div class="campo" data-campo="tad">
-              <label for="tad">Presión DIASTÓLICA (la baja, mmHg)</label>
-              <input type="text" inputmode="decimal" id="tad" name="tad">
-            </div>
+          <div class="campo" data-campo="presion">
+            <label for="presion">Presión arterial (mmHg)</label>
+            <input type="text" inputmode="numeric" id="presion" name="presion" placeholder="120/70">
+            <p class="nota">Escriba la alta y luego la baja; la diagonal se pone sola. Déjela vacía solo si no se midió.</p>
           </div>
-          <p class="nota">Deje la presión vacía solo si no se midió.</p>
           <fieldset class="campo" data-campo="sintomas_alarma">
             <legend>Síntomas de alarma. ¿Tiene AHORA alguno de estos?</legend>
             <ul id="lista-sintomas" class="recuadro"></ul>
