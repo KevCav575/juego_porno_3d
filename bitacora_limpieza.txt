@@ -1,0 +1,47 @@
+Registros originales: 4,363; columnas: 36
+FOLIO_I duplicados: 0; filas duplicadas: 0
+Química sanguínea imputada con la mediana (>=3 valores idénticos a la moda): 3,001 filas -> NaN
+Micronutrientes imputados: 3,771 filas -> NaN
+HbA1c imputada (5.2 % + glucosa promedio 103 + química imputada): 2,994 filas -> NaN
+Hemoglobina imputada (14.2 + química imputada): 2,800 filas -> NaN
+resultado_glucosa: 2 valores fuera de 30-600 -> NaN
+valor_colesterol_hdl: 2 valores fuera de 10-150 -> NaN
+valor_colesterol_total: 3 valores fuera de 50-700 -> NaN
+valor_creatina: 2 valores fuera de 0.1-15 -> NaN
+Peso codificado como 2.0 (faltante): 961 filas; se tomó el peso del módulo 2 en 955
+Cintura en 0 (faltante) en el módulo 1: 1320; recuperadas del módulo 2: 870
+Columnas 'segundamedicion_*' en filas del módulo 1 contienen la mediana imputada (64.7 kg / 154 cm / 0 cm): se descartan
+peso_kg: 4 valores fuera de 30-250 -> NaN
+talla_cm: 4 valores fuera de 120-210 -> NaN
+cintura_cm: 3 valores fuera de 50-180 -> NaN
+IMC recalculado con peso y talla; 0 fuera de 12-70 -> NaN (se descarta 'masa_corporal' original: usaba códigos 1.0 y 44.13 como faltante y difiere ~1 punto del cálculo)
+tension_arterial en 0: 29 -> NaN (se asume presión sistólica)
+sueno_horas = 99 (no sabe/no responde): 3 -> NaN. Son categorías 1-5, NO horas; sin catálogo no se puede traducir
+actividad_total > 6720 min/semana (más de 16 h diarias): 2 -> NaN (se asumen minutos por semana)
+Menores de 20 años: 80 (se conservan en el archivo, se excluyen del modelo)
+Se eliminan: temperatura_ambiente (3,451 de 4,363 con el mismo valor 22; sin utilidad clínica), masa_corporal, columnas de antropometría originales (sustituidas por peso_kg, talla_cm, cintura_cm), distancia_rodilla_talon y pantorrilla (solo módulo 2)
+resultado_glucosa_promedio se conserva limpia pero NO debe usarse como predictor: está derivada de la HbA1c (fuga de información)
+riesgo_hipertension se conserva tal cual; no corresponde a la presión registrada (hay 'riesgo 1' con presión < 120), su definición no está documentada
+
+RESULTADO: 4,363 filas x 36 columnas en el archivo limpio
+Aptos para el modelo de diabetes (>=20 años con HbA1c real): 1,369; con diabetes por HbA1c >= 6.5: 238 (17.4%)
+
+====================================================================
+DICCIONARIO DEL ARCHIVO LIMPIO (Hipertension_Arterial_Mexico_limpio.csv)
+====================================================================
+FOLIO_I ................ ID original del registro
+sexo / sexo_txt ........ 1 = hombre, 2 = mujer
+edad ................... años cumplidos
+peso_kg, talla_cm ...... unificados de las dos fuentes de antropometría
+imc .................... recalculado = peso_kg / (talla_cm/100)^2
+cintura_cm ............. unificada de las dos fuentes
+cintura_talla .......... cintura_cm / talla_cm
+fuente_antropometria ... modulo_1 (columnas originales) o modulo_2 (columnas segundamedicion_*, sobre todo adultos mayores)
+tas_mmhg ............... tension_arterial sin ceros (se asume sistólica)
+sueno_categoria ........ sueno_horas sin el 99; categorías 1-5 SIN catálogo (no son horas)
+actividad_min_semana ... actividad_total sin valores imposibles (se asume minutos/semana)
+valor_* / resultado_* .. laboratorio; NaN donde el valor original era la mediana imputada o imposible
+riesgo_hipertension .... sin cambios; definición no documentada
+diabetes_hba1c ......... 1 si HbA1c >= 6.5 %, 0 si < 6.5 %, vacío si no hay HbA1c real
+disglucemia_hba1c ...... 1 si HbA1c >= 5.7 %
+apto_modelo_diabetes ... True si edad >= 20 y HbA1c real

@@ -1,0 +1,4 @@
+﻿fecha,sexo,dx_diabetes,dx_hipertension,edad,actividad_min,talla_cm,cintura_cm,peso_kg,glucosa,en_ayuno,tas,tad,sintomas_alarma,c1_familiar_diabetes,c3_diabetes_gestacional,c4_prediabetes,c5_fuma,puntos_total,diabetes_nivel,diabetes_escala,diabetes_prob,hta_nivel,hta_escala,hta_prob
+2026-09-28T18:06:45,hombre,no,no,20,30,170,100,120,,,,,si,si,,si,actual,3,BAJO,2,4.3%,ATENCIÓN INMEDIATA,,7.6%
+2026-09-28T18:32:00,hombre,no,no,20,240,181,80,73,,,,,no,no,,no,nunca,0,BAJO,1,2.0%,BAJO,1,3.7%
+2026-09-28T18:44:27,hombre,no,no,20,150,170,65,70,,,,,no,no,,no,nunca,0,BAJO,1,2.0%,BAJO,1,3.2%

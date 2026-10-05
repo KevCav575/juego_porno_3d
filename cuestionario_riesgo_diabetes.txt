@@ -1,0 +1,202 @@
+CUESTIONARIO DE RIESGO DE DIABETES (TAMIZAJE COMUNITARIO)
+Versión 0.1 - prototipo derivado de datos ENSANUT 2022 (dataset "Hipertensión Arterial México")
+
+IMPORTANTE: Este cuestionario NO diagnostica diabetes. Estima una probabilidad
+para decidir a quién canalizar. Debe validarse con el asesor médico antes de
+usarse con personas reales. La prueba de glucosa con glucómetro se hace a
+TODAS las personas, sin importar el puntaje.
+
+====================================================================
+ANTES DE EMPEZAR
+====================================================================
+
+A. ¿La persona tiene 20 años o más?
+   [ ] Sí -> continúe
+   [ ] No -> no aplique este cuestionario
+
+B. (Solo mujeres) ¿Está embarazada?
+   [ ] No -> continúe
+   [ ] Sí -> no aplique; refiera a control prenatal
+
+C. ¿Algún médico le ha dicho que tiene diabetes o "azúcar alta"?
+   [ ] No -> continúe
+   [ ] Sí -> no aplique el puntaje; pase a la ruta de CONTROL
+             (mida glucosa y refiera a su centro de salud)
+
+====================================================================
+PREGUNTAS (anote los puntos de cada respuesta)
+====================================================================
+
+PREGUNTA 1. ¿Cuántos años tiene?
+   20 a 29 años ........................................ 0 puntos
+   30 a 39 años ........................................ 2 puntos
+   40 a 49 años ........................................ 4 puntos
+   50 a 59 años ........................................ 6 puntos
+   60 años o más ....................................... 8 puntos
+
+   Si no sabe su edad exacta, pregunte año de nacimiento o
+   estime con documento. Anote "edad estimada".
+
+PREGUNTA 2. Sexo
+   Hombre .............................................. 0 puntos
+   Mujer ............................................... 2 puntos
+
+PREGUNTA 3. En una semana normal, sumando su trabajo, sus traslados
+a pie o en bicicleta y cualquier ejercicio, ¿cuánto tiempo pasa
+haciendo actividad física que lo haga respirar más rápido o sudar?
+   Menos de 2 horas y media por semana
+   (menos de 150 minutos, o menos de unos 20 minutos al día) .. 1 punto
+   2 horas y media por semana o más ..................... 0 puntos
+
+   Ayuda para el promotor: 30 minutos, 5 días a la semana = 150 minutos.
+   El trabajo en el campo (cargar, cosechar, desyerbar) SÍ cuenta.
+
+====================================================================
+MEDICIÓN (con cinta métrica y estadímetro o cinta en la pared)
+====================================================================
+
+PREGUNTA 4. Cintura comparada con la estatura
+
+   Cómo medir:
+   - Estatura: sin zapatos, espalda y talones pegados a la pared,
+     mirando al frente. Anote en centímetros.
+   - Cintura: de pie, sin ropa gruesa, al final de una exhalación
+     normal. La cinta va a la mitad entre la última costilla y el
+     hueso de la cadera, sin apretar. Anote en centímetros.
+
+   Estatura: ________ cm      Cintura: ________ cm
+
+   Busque la estatura más cercana en la tabla y compare la cintura:
+
+   Estatura | 0 puntos si la cintura | 2 puntos si la cintura     | 3 puntos si la cintura
+   (cm)     | es menor de...        | va de ... a menos de ...   | es de ... o más
+   ---------+-----------------------+----------------------------+-----------------------
+     140    | 70 cm                 | 70 a 98 cm                 | 98 cm
+     145    | 72.5 cm               | 72.5 a 101.5 cm            | 101.5 cm
+     150    | 75 cm                 | 75 a 105 cm                | 105 cm
+     155    | 77.5 cm               | 77.5 a 108.5 cm            | 108.5 cm
+     160    | 80 cm                 | 80 a 112 cm                | 112 cm
+     165    | 82.5 cm               | 82.5 a 115.5 cm            | 115.5 cm
+     170    | 85 cm                 | 85 a 119 cm                | 119 cm
+     175    | 87.5 cm               | 87.5 a 122.5 cm            | 122.5 cm
+     180    | 90 cm                 | 90 a 126 cm                | 126 cm
+     185    | 92.5 cm               | 92.5 a 129.5 cm            | 129.5 cm
+
+   Cálculo exacto (lo hace la app): cintura / estatura
+      menos de 0.50 ............ 0 puntos
+      0.50 a 0.69 .............. 2 puntos
+      0.70 o más ............... 3 puntos
+
+====================================================================
+SUMA Y RESULTADO
+====================================================================
+
+   Pregunta 1 (edad) ................ ____
+   Pregunta 2 (sexo) ................ ____
+   Pregunta 3 (actividad física) .... ____
+   Pregunta 4 (cintura/estatura) .... ____
+                                      ----
+   TOTAL (de 0 a 14 puntos) ......... ____
+
+   Puntos | Probabilidad estimada de diabetes | Nivel
+   -------+-----------------------------------+-------
+     0    |  2 de cada 100 personas (1.9 %)   | BAJO
+     1    |  3 de cada 100 (2.5 %)            | BAJO
+     2    |  3 de cada 100 (3.3 %)            | BAJO
+     3    |  4 de cada 100 (4.3 %)            | BAJO
+     4    |  6 de cada 100 (5.5 %)            | BAJO
+     5    |  7 de cada 100 (7.1 %)            | BAJO
+     6    |  9 de cada 100 (9.1 %)            | BAJO
+     7    | 12 de cada 100 (11.5 %)           | MEDIO
+     8    | 15 de cada 100 (14.6 %)           | MEDIO
+     9    | 18 de cada 100 (18.2 %)           | MEDIO
+    10    | 23 de cada 100 (22.6 %)           | MEDIO
+    11    | 28 de cada 100 (27.6 %)           | ALTO
+    12    | 33 de cada 100 (33.3 %)           | ALTO
+    13    | 40 de cada 100 (39.5 %)           | ALTO
+    14    | 46 de cada 100 (46.1 %)           | ALTO
+
+   La probabilidad es para el promotor y el médico. A la persona
+   se le comunica solo el NIVEL, con palabras sencillas.
+
+====================================================================
+QUÉ HACER SEGÚN EL NIVEL
+====================================================================
+
+   BAJO (0 a 6 puntos)
+   - Mida glucosa de todos modos.
+   - Si la glucosa es normal: "Su riesgo es bajo. Siga cuidándose y
+     revísese de nuevo en un año."
+
+   MEDIO (7 a 10 puntos)
+   - Mida glucosa.
+   - "Le conviene hacerse una prueba de confirmación en su centro de
+     salud en las próximas semanas."
+
+   ALTO (11 a 14 puntos)
+   - Mida glucosa.
+   - "Le recomendamos acudir a su centro de salud en los próximos días
+     para confirmar." Entregue hoja de referencia.
+
+   LA GLUCOSA MANDA SOBRE EL PUNTAJE (reglas a validar con el médico):
+   - Glucosa menor de 54 o de 300 mg/dL o más: ATENCIÓN HOY.
+   - En ayuno (8 horas o más sin comer): 126 mg/dL o más = ALTO;
+     de 100 a 125 mg/dL = al menos MEDIO.
+   - Sin ayuno: 200 mg/dL o más = ALTO; de 140 a 199 = al menos MEDIO.
+   - El nivel final es el MÁS ALTO entre el puntaje y la glucosa.
+     La glucosa puede subir el nivel, nunca bajarlo.
+
+====================================================================
+PREGUNTAS COMPLEMENTARIAS (se registran, NO suman puntos)
+====================================================================
+No estaban en los datos con que se construyó el puntaje, pero son
+factores de riesgo conocidos. Registrarlas permite mejorar el
+cuestionario con los datos de campo.
+
+   C1. ¿Su papá, mamá, hermanos o hijos tienen o tuvieron diabetes?
+       [ ] Sí  [ ] No  [ ] No sé
+   C2. ¿Algún médico le ha dicho que tiene presión alta?
+       [ ] Sí  [ ] No  [ ] No sé
+   C3. (Mujeres) ¿Tuvo azúcar alta en algún embarazo, o algún bebé
+       de más de 4 kilos al nacer?
+       [ ] Sí  [ ] No  [ ] No sé
+   C4. ¿Alguna vez le dijeron que tenía el azúcar "un poco alta"?
+       [ ] Sí  [ ] No  [ ] No sé
+   C5. ¿Fuma actualmente?
+       [ ] Nunca  [ ] Antes sí, ya no  [ ] Sí, actualmente
+   C6. Peso: ________ kg (para calcular IMC en la app)
+
+====================================================================
+FICHA TÉCNICA (para el equipo, no para la persona)
+====================================================================
+- Datos: dataset "Hipertensión Arterial México" (derivado de ENSANUT
+  Continua 2022), después de limpieza. 4,363 registros originales;
+  1,282 adultos de 20 años o más con HbA1c real y datos completos.
+- Definición de diabetes: HbA1c de 6.5 % o más (incluye personas ya
+  diagnosticadas; el dataset no permite separarlas). Casos: 228 (17.8 %).
+- Método: regresión logística con edad en décadas, sexo, cintura/estatura
+  y actividad física; puntos = coeficiente / 0.25, redondeado. La
+  probabilidad por puntaje se obtuvo ajustando una logística sobre el
+  puntaje total.
+- Desempeño: AUC-ROC en validación cruzada 0.686 (5 pliegues x 20
+  repeticiones). Es un desempeño moderado, similar al de cuestionarios
+  cortos de este tipo.
+  Con corte en MEDIO o más (7 puntos): sensibilidad 86 %, especificidad
+  35 %, marca al 69 % de las personas.
+  Nivel ALTO (11 puntos o más): sensibilidad 43 %, especificidad 83 %;
+  35 % de las personas en ALTO tenían diabetes.
+  Proporción real con diabetes por nivel: BAJO 7.7 %, MEDIO 16.4 %,
+  ALTO 35.2 %.
+- Por qué la glucosa se mide a todos: en el nivel BAJO todavía hay
+  alrededor de 8 de cada 100 personas con diabetes. Como referencia,
+  al agregar la glucosa (venosa) al puntaje, el AUC sube a 0.92.
+- Variables evaluadas y descartadas: presión arterial (no mejoró el
+  puntaje en validación cruzada; se evalúa con sus propias reglas),
+  IMC (no aportó más que cintura/estatura), horas de sueño (vienen como
+  categorías 1-5 sin catálogo; no se pueden traducir a una pregunta).
+- Limitaciones: el dataset no incluye antecedentes familiares ni
+  diagnóstico previo; no se usaron pesos muestrales; la unidad de
+  "actividad_total" se asumió como minutos por semana; los datos son de
+  población general mexicana, no específicamente de jornaleros.
+  Antes de usarlo en campo: recalibrar las probabilidades con datos
+  propios confirmados por el centro de salud.
