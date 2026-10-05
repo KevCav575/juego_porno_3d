@@ -1,0 +1,13 @@
+{
+  "name": "Tamizaje de diabetes e hipertensión",
+  "short_name": "Tamizaje",
+  "lang": "es-MX",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f6f6",
+  "theme_color": "#0f5c5c",
+  "icons": [
+    { "src": "icono.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f5c5c">
+  <title>Tamizaje de diabetes e hipertensión</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icono.svg" type="image/svg+xml">
+  <style>
+    :root {
+      --fondo: #f4f6f6; --tarjeta: #fff; --texto: #1c2b2b; --tenue: #5b6b6b; --borde: #cfd8d8;
+      --marca: #0f5c5c; --sobre-marca: #fff;
+      --bajo: #1d7a3e; --medio: #a86400; --alto: #c2410c; --urgente: #b00020; --control: #1d4f91;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --fondo: #101818; --tarjeta: #1a2525; --texto: #e6eeee; --tenue: #9db0b0; --borde: #354545;
+        --marca: #4fb3b3; --sobre-marca: #062020;
+        --bajo: #5fd08a; --medio: #f0b24a; --alto: #ff9466; --urgente: #ff6b81; --control: #7fb2f0;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--fondo); color: var(--texto);
+      font: 17px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    main { max-width: 640px; margin: 0 auto; padding: 16px 16px 48px; }
+    h1 { font-size: 1.35rem; margin: 8px 0 4px; }
+    h2 { font-size: 1.05rem; margin: 0 0 12px; color: var(--marca); }
+    .nota { color: var(--tenue); font-size: .9rem; margin: 4px 0 0; }
+    section, .tarjeta {
+      background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 12px;
+      padding: 16px; margin-top: 16px;
+    }
+    .campo { margin-bottom: 16px; }
+    .campo:last-child { margin-bottom: 0; }
+    .campo > label, legend { display: block; font-weight: 600; margin-bottom: 6px; padding: 0; }
+    fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+    input[type="text"] {
+      width: 100%; padding: 12px; font: inherit; color: inherit; background: var(--fondo);
+      border: 1px solid var(--borde); border-radius: 8px;
+    }
+    .opciones { display: flex; flex-wrap: wrap; gap: 8px; }
+    .opciones label { flex: 1 1 auto; }
+    .opciones input { position: absolute; opacity: 0; }
+    .opciones span {
+      display: block; text-align: center; padding: 12px 14px; border: 1px solid var(--borde);
+      border-radius: 8px; background: var(--fondo); cursor: pointer;
+    }
+    .opciones input:checked + span { background: var(--marca); border-color: var(--marca); color: var(--sobre-marca); font-weight: 600; }
+    .opciones input:focus-visible + span, input[type="text"]:focus-visible, button:focus-visible {
+      outline: 3px solid var(--marca); outline-offset: 2px;
+    }
+    .error { color: var(--urgente); font-size: .9rem; margin: 6px 0 0; }
+    .invalido input[type="text"], .invalido .opciones span { border-color: var(--urgente); }
+    ul { margin: 0 0 12px; padding-left: 20px; }
+    button {
+      font: inherit; font-weight: 600; padding: 14px 16px; border-radius: 8px; cursor: pointer;
+      border: 1px solid var(--marca); background: var(--marca); color: var(--sobre-marca);
+    }
+    button.secundario { background: transparent; color: var(--marca); }
+    button.peligro { background: transparent; color: var(--urgente); border-color: var(--urgente); }
+    button.ancho { width: 100%; margin-top: 16px; }
+    .botones { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .aviso { border-left: 6px solid var(--urgente); }
+    .resultado { border-left: 6px solid var(--borde); }
+    .resultado h3 { margin: 0 0 4px; font-size: .95rem; letter-spacing: .04em; color: var(--tenue); }
+    .resultado .titular { font-size: 1.4rem; font-weight: 700; margin: 0; }
+    .resultado p { margin: 6px 0 0; }
+    .BAJO { border-left-color: var(--bajo); } .BAJO .titular { color: var(--bajo); }
+    .MEDIO { border-left-color: var(--medio); } .MEDIO .titular { color: var(--medio); }
+    .ALTO { border-left-color: var(--alto); } .ALTO .titular { color: var(--alto); }
+    .URGENTE { border-left-color: var(--urgente); } .URGENTE .titular { color: var(--urgente); }
+    .CONTROL { border-left-color: var(--control); } .CONTROL .titular { color: var(--control); }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Riesgo de diabetes e hipertensión</h1>
+  <p class="nota">Tamizaje comunitario. Este resultado NO es un diagnóstico. La glucosa se mide a TODAS las personas.</p>
+
+  <div id="error-carga" class="tarjeta aviso" hidden></div>
+
+  <form id="cuestionario" novalidate autocomplete="off">
+    <section>
+      <h2>Antes de empezar</h2>
+      <fieldset class="campo" data-campo="mayor20">
+        <legend>A. ¿La persona tiene 20 años o más?</legend>
+        <div class="opciones">
+          <label><input type="radio" name="mayor20" value="s"><span>Sí</span></label>
+          <label><input type="radio" name="mayor20" value="n"><span>No</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="campo" data-campo="sexo">
+        <legend>Sexo</legend>
+        <div class="opciones">
+          <label><input type="radio" name="sexo" value="h"><span>Hombre</span></label>
+          <label><input type="radio" name="sexo" value="m"><span>Mujer</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="campo" data-campo="embarazada" data-solo-mujer hidden>
+        <legend>B. ¿Está embarazada?</legend>
+        <div class="opciones">
+          <label><input type="radio" name="embarazada" value="s"><span>Sí</span></label>
+          <label><input type="radio" name="embarazada" value="n"><span>No</span></label>
+        </div>
+      </fieldset>
+    </section>
+
+    <div id="no-aplica" class="tarjeta aviso" hidden></div>
+
+    <div id="resto">
+      <section>
+        <h2>Diagnóstico previo</h2>
+        <fieldset class="campo" data-campo="dx_diabetes">
+          <legend>C. ¿Algún médico le ha dicho que tiene diabetes o "azúcar alta"?</legend>
+          <div class="opciones">
+            <label><input type="radio" name="dx_diabetes" value="s"><span>Sí</span></label>
+            <label><input type="radio" name="dx_diabetes" value="n"><span>No</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="campo" data-campo="dx_hipertension">
+          <legend>C2. ¿Algún médico le ha dicho que tiene presión alta?</legend>
+          <div class="opciones">
+            <label><input type="radio" name="dx_hipertension" value="s"><span>Sí</span></label>
+            <label><input type="radio" name="dx_hipertension" value="n"><span>No</span></label>
+          </div>
+        </fieldset>
+      </section>
+
+      <section>
+        <h2>Preguntas</h2>
+        <div class="campo" data-campo="edad">
+          <label for="edad">1. Edad en años</label>
+          <input type="text" inputmode="numeric" id="edad" name="edad">
+        </div>
+        <div class="campo" data-campo="actividad_min">
+          <label for="actividad_min">3. Minutos por semana de actividad física</label>
+          <input type="text" inputmode="decimal" id="actividad_min" name="actividad_min">
+          <p class="nota">En una semana normal (trabajo, traslados a pie o en bici, ejercicio), actividad que lo haga
+            respirar más rápido o sudar. 30 minutos × 5 días = 150. El trabajo en el campo SÍ cuenta.</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Medición</h2>
+        <div class="campo" data-campo="talla_cm">
+          <label for="talla_cm">4. Estatura (cm, sin zapatos)</label>
+          <input type="text" inputmode="decimal" id="talla_cm" name="talla_cm">
+        </div>
+        <div class="campo" data-campo="cintura_cm">
+          <label for="cintura_cm">Cintura (cm)</label>
+          <input type="text" inputmode="decimal" id="cintura_cm" name="cintura_cm">
+          <p class="nota">De pie, al final de una exhalación normal, a la mitad entre la última costilla y el hueso de la cadera.</p>
+        </div>
+        <div class="campo" data-campo="peso_kg">
+          <label for="peso_kg">C6. Peso (kg, opcional)</label>
+          <input type="text" inputmode="decimal" id="peso_kg" name="peso_kg">
+        </div>
+        <div class="campo" data-campo="glucosa">
+          <label for="glucosa">Glucosa con glucómetro (mg/dL)</label>
+          <input type="text" inputmode="decimal" id="glucosa" name="glucosa">
+          <p class="nota">Déjelo vacío solo si no se pudo medir.</p>
+        </div>
+        <fieldset class="campo" data-campo="en_ayuno" hidden>
+          <legend>¿Lleva 8 horas o más sin comer?</legend>
+          <div class="opciones">
+            <label><input type="radio" name="en_ayuno" value="s"><span>Sí</span></label>
+            <label><input type="radio" name="en_ayuno" value="n"><span>No</span></label>
+          </div>
+        </fieldset>
+        <div class="campo" data-campo="tas">
+          <label for="tas">Presión SISTÓLICA (la alta, mmHg)</label>
+          <input type="text" inputmode="decimal" id="tas" name="tas">
+        </div>
+        <div class="campo" data-campo="tad">
+          <label for="tad">Presión DIASTÓLICA (la baja, mmHg)</label>
+          <input type="text" inputmode="decimal" id="tad" name="tad">
+          <p class="nota">Deje la presión vacía solo si no se midió.</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Síntomas de alarma</h2>
+        <fieldset class="campo" data-campo="sintomas_alarma">
+          <legend>¿Tiene AHORA alguno de estos?</legend>
+          <ul id="lista-sintomas"></ul>
+          <div class="opciones">
+            <label><input type="radio" name="sintomas_alarma" value="s"><span>Sí, alguno</span></label>
+            <label><input type="radio" name="sintomas_alarma" value="n"><span>No, ninguno</span></label>
+          </div>
+        </fieldset>
+      </section>
+
+      <section>
+        <h2>Preguntas complementarias</h2>
+        <p class="nota" style="margin:-8px 0 12px">Se registran, NO suman puntos.</p>
+        <fieldset class="campo" data-campo="c1_familiar_diabetes">
+          <legend>C1. ¿Papá, mamá, hermanos o hijos con diabetes?</legend>
+          <div class="opciones">
+            <label><input type="radio" name="c1_familiar_diabetes" value="si"><span>Sí</span></label>
+            <label><input type="radio" name="c1_familiar_diabetes" value="no"><span>No</span></label>
+            <label><input type="radio" name="c1_familiar_diabetes" value="no_se"><span>No sé</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="campo" data-campo="c3_diabetes_gestacional" data-solo-mujer hidden>
+          <legend>C3. ¿Azúcar alta en algún embarazo o bebé de más de 4 kg?</legend>
+          <div class="opciones">
+            <label><input type="radio" name="c3_diabetes_gestacional" value="si"><span>Sí</span></label>
+            <label><input type="radio" name="c3_diabetes_gestacional" value="no"><span>No</span></label>
+            <label><input type="radio" name="c3_diabetes_gestacional" value="no_se"><span>No sé</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="campo" data-campo="c4_prediabetes">
+          <legend>C4. ¿Le dijeron que tenía el azúcar "un poco alta"?</legend>
+          <div class="opciones">
+            <label><input type="radio" name="c4_prediabetes" value="si"><span>Sí</span></label>
+            <label><input type="radio" name="c4_prediabetes" value="no"><span>No</span></label>
+            <label><input type="radio" name="c4_prediabetes" value="no_se"><span>No sé</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="campo" data-campo="c5_fuma">
+          <legend>C5. ¿Fuma?</legend>
+          <div class="opciones">
+            <label><input type="radio" name="c5_fuma" value="nunca"><span>Nunca</span></label>
+            <label><input type="radio" name="c5_fuma" value="antes"><span>Antes sí, ya no</span></label>
+            <label><input type="radio" name="c5_fuma" value="actual"><span>Sí, actualmente</span></label>
+          </div>
+        </fieldset>
+      </section>
+
+      <button type="submit" class="ancho">Calcular resultado</button>
+    </div>
+  </form>
+
+  <div id="resultado" hidden>
+    <div id="resultado-contenido"></div>
+    <p id="estado-guardado" class="nota"></p>
+    <button type="button" id="otra-persona" class="ancho">Evaluar a otra persona</button>
+  </div>
+
+  <div class="tarjeta">
+    <h2>Registro de campo</h2>
+    <p id="conteo-registro" class="nota"></p>
+    <p class="nota">Los datos se guardan solo en este dispositivo. Descargue el CSV para entregarlos.</p>
+    <div class="botones">
+      <button type="button" id="descargar" class="secundario">Descargar CSV</button>
+      <button type="button" id="borrar" class="peligro">Borrar registros</button>
+    </div>
+  </div>
+</main>
+<script type="module" src="app.js"></script>
+</body>
+</html>
