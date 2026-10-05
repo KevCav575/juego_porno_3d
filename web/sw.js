@@ -1,7 +1,8 @@
 // Guarda la app en el dispositivo para usarla sin señal. Responde desde la copia
 // guardada y la actualiza en segundo plano: los cambios se ven en la siguiente carga.
-const CACHE = "tamizaje-v1";
-const ARCHIVOS = ["./", "index.html", "app.js", "riesgo.js", "registro.js", "modelo.json", "manifest.webmanifest", "icono.svg"];
+const CACHE = "tamizaje-v3";
+const ARCHIVOS = ["./", "index.html", "estilos.css", "app.js", "riesgo.js", "registro.js", "modelo.json", "manifest.webmanifest", "icono.svg",
+  "fuentes/inter.woff2", "fuentes/manrope.woff2", "fuentes/iconos.woff2"];
 
 self.addEventListener("install", (evento) => {
   evento.waitUntil(caches.open(CACHE).then((c) => c.addAll(ARCHIVOS)).then(() => self.skipWaiting()));

@@ -52,7 +52,51 @@ function actualizarVisibilidad() {
   }
   $("no-aplica").textContent = motivo ?? "";
   $("no-aplica").hidden = !motivo;
-  $("resto").hidden = Boolean(motivo);
+  $("siguiente").disabled = Boolean(motivo);
+}
+
+// --------------------------------------------------------------------
+// Pasos y barra de progreso
+// --------------------------------------------------------------------
+const pasos = [...form.querySelectorAll(".paso")];
+const botonesProgreso = pasos.map((paso, i) => {
+  const boton = crear("button");
+  boton.type = "button";
+  boton.textContent = `${i + 1}. ${paso.dataset.corto}`;
+  boton.addEventListener("click", () => mostrarPaso(i));
+  const li = crear("li");
+  li.append(boton);
+  $("progreso-pasos").append(li);
+  return boton;
+});
+let pasoActual = 0;
+
+function mostrarPaso(i, desplazar = true) {
+  const ultimo = i === pasos.length - 1;
+  pasoActual = i;
+  pasos.forEach((paso, j) => { paso.hidden = j !== i; });
+  botonesProgreso.forEach((boton, j) => {
+    boton.className = j < i ? "hecho" : j === i ? "actual" : "";
+    boton.disabled = j > i; // solo se puede regresar a pasos ya llenados
+  });
+  $("progreso-texto").textContent = `Paso ${i + 1} de ${pasos.length}: ${pasos[i].dataset.titulo}`;
+  $("progreso-porcentaje").textContent = `${Math.round(((i + 1) / pasos.length) * 100)}%`;
+  $("progreso-barra").value = i + 1;
+  $("atras").hidden = i === 0;
+  $("siguiente").classList.toggle("final", ultimo);
+  $("siguiente-texto").textContent = ultimo ? "Calcular resultado" : "Siguiente";
+  $("siguiente-icono").textContent = ultimo ? "analytics" : "arrow_forward";
+  if (desplazar) $("evaluador").scrollIntoView();
+}
+
+// El deslizador solo escribe en su caja de texto; la caja es la que se valida y se guarda.
+for (const deslizador of form.querySelectorAll('input[type="range"]')) {
+  const caja = $(deslizador.dataset.para);
+  deslizador.addEventListener("input", () => { caja.value = deslizador.value; });
+  caja.addEventListener("input", () => {
+    const n = parseFloat(caja.value.replace(",", "."));
+    if (!Number.isNaN(n)) deslizador.value = n;
+  });
 }
 
 // --------------------------------------------------------------------
@@ -89,7 +133,7 @@ function leerOpcion(nombre, opciones) {
   return opciones ? opciones[valor] : valor;
 }
 
-/** Devuelve las respuestas con las mismas claves que nmist.py, o null si falta algo. */
+/** Devuelve las respuestas con las mismas claves que nmist.py y marca en pantalla lo que falte. */
 function leerRespuestas() {
   limpiarErrores();
   const num = Object.fromEntries(NUMEROS.map(([n, ...rango]) => [n, leerNumero(n, ...rango)]));
@@ -113,55 +157,71 @@ function leerRespuestas() {
   if (r.mujer) r.c3_diabetes_gestacional = leerOpcion("c3_diabetes_gestacional");
   r.c4_prediabetes = leerOpcion("c4_prediabetes");
   r.c5_fuma = leerOpcion("c5_fuma");
-
-  const primerError = form.querySelector(".invalido");
-  if (primerError) {
-    primerError.scrollIntoView({ behavior: "smooth", block: "center" });
-    return null;
-  }
   return r;
 }
 
 // --------------------------------------------------------------------
 // Resultado
 // --------------------------------------------------------------------
-function tarjetaEnfermedad(nombre, r) {
-  const clase = r.urgente ? "URGENTE" : r.nivel;
-  const tarjeta = crear("div", null, `tarjeta resultado ${clase}`);
-  tarjeta.append(crear("h3", nombre));
+function icono(nombre, clase = "icono") {
+  const el = crear("span", nombre, clase);
+  el.setAttribute("aria-hidden", "true");
+  return el;
+}
+
+/** Anillo que se llena según la escala 1-10 (el color lo pone la clase del nivel). */
+function anillo(escala) {
+  const el = crear("div", null, "anillo");
+  el.style.setProperty("--escala", escala);
+  el.setAttribute("role", "img");
+  el.setAttribute("aria-label", `Riesgo ${escala} de 10`);
+  const centro = crear("div");
+  centro.append(crear("b", escala), crear("span", "de 10"));
+  el.append(centro);
+  return el;
+}
+
+function tarjetaEnfermedad(nombre, indicador, simbolo, r) {
+  const tarjeta = crear("article", null, `tarjeta resultado ${r.urgente ? "URGENTE" : r.nivel}`);
+  const cabecera = crear("header");
+  const titulo = crear("div");
+  titulo.append(crear("p", indicador, "sobretitulo"), crear("h3", nombre));
+  cabecera.append(titulo, icono(simbolo));
+  tarjeta.append(cabecera);
   if (r.urgente) {
-    tarjeta.append(crear("p", "ATENCIÓN INMEDIATA", "titular"));
+    tarjeta.append(icono("emergency", "icono simbolo"), crear("p", "ATENCIÓN INMEDIATA", "titular"));
   } else if (r.control) {
-    tarjeta.append(crear("p", "Ruta de CONTROL", "titular"), crear("p", "Diagnóstico previo.", "nota"));
+    tarjeta.append(
+      icono("verified_user", "icono simbolo"),
+      crear("p", "Ruta de CONTROL", "titular"),
+      crear("p", "Diagnóstico previo", "etiqueta")
+    );
   } else {
     tarjeta.append(
-      crear("p", `Riesgo ${r.escala} / 10 · nivel ${r.nivel}`, "titular"),
+      anillo(r.escala),
+      crear("p", `Nivel ${r.nivel}`, "etiqueta"),
       crear("p", `Probabilidad estimada por el modelo (solo para promotor/médico): ${(r.prob * 100).toFixed(1)} %`, "nota")
     );
   }
-  tarjeta.append(crear("p", MENSAJES[r.nivel]));
+  const recomendacion = crear("p", null, "recuadro");
+  recomendacion.append(crear("b", "Qué hacer"), MENSAJES[r.nivel]);
+  tarjeta.append(recomendacion);
   return tarjeta;
 }
 
 function mostrarResultado(res) {
   const p = res.puntos;
-  const resumen = crear("div", null, "tarjeta");
-  resumen.append(
-    crear("h2", "Resultado del tamizaje"),
-    crear("p", `Puntos del cuestionario de diabetes: edad ${p.edad} + sexo ${p.sexo} + actividad ${p.actividad}` +
-      ` + cintura/estatura ${p.cintura_talla} = ${res.puntos_total} / 14`, "nota"),
-    crear("p", `Cintura/estatura: ${res.cintura_talla.toFixed(2)}` +
-      (res.imc != null ? ` · IMC: ${res.imc.toFixed(1)}` : ""), "nota")
-  );
+  $("resultado-resumen").textContent =
+    `Puntos del cuestionario de diabetes: edad ${p.edad} + sexo ${p.sexo} + actividad ${p.actividad}` +
+    ` + cintura/estatura ${p.cintura_talla} = ${res.puntos_total} / 14 · Cintura/estatura: ${res.cintura_talla.toFixed(2)}` +
+    (res.imc != null ? ` · IMC: ${res.imc.toFixed(1)}` : "");
   $("resultado-contenido").replaceChildren(
-    resumen,
-    tarjetaEnfermedad("DIABETES", res.diabetes),
-    tarjetaEnfermedad("HIPERTENSIÓN", res.hipertension),
-    crear("p", "Recuerde: la glucosa se mide a TODAS las personas. Este resultado NO es un diagnóstico.", "nota")
+    tarjetaEnfermedad("Diabetes", "Indicador metabólico", "water_drop", res.diabetes),
+    tarjetaEnfermedad("Hipertensión", "Indicador cardiovascular", "monitor_heart", res.hipertension)
   );
   form.hidden = true;
   $("resultado").hidden = false;
-  $("resultado").scrollIntoView({ block: "start" });
+  $("evaluador").scrollIntoView();
 }
 
 // --------------------------------------------------------------------
@@ -202,12 +262,31 @@ async function borrar() {
 // --------------------------------------------------------------------
 // Eventos
 // --------------------------------------------------------------------
-form.addEventListener("input", actualizarVisibilidad);
+form.addEventListener("input", (evento) => {
+  // Al corregir un campo se quita su aviso de error.
+  const corregido = evento.target.closest(".invalido");
+  if (corregido) {
+    corregido.classList.remove("invalido");
+    corregido.querySelector(".error").remove();
+  }
+  actualizarVisibilidad();
+});
 
 form.addEventListener("submit", async (evento) => {
   evento.preventDefault();
   const r = leerRespuestas();
-  if (!r) return;
+  // Solo importan los errores del paso actual o de los anteriores.
+  const conError = pasos.findIndex((paso) => paso.querySelector(".invalido"));
+  if (conError !== -1 && conError <= pasoActual) {
+    if (conError !== pasoActual) mostrarPaso(conError);
+    form.querySelector(".invalido").scrollIntoView({ behavior: "smooth", block: "center" });
+    return;
+  }
+  if (pasoActual < pasos.length - 1) {
+    limpiarErrores();
+    mostrarPaso(pasoActual + 1);
+    return;
+  }
   const res = evaluarPersona(modelo, r);
   mostrarResultado(res);
   try {
@@ -225,14 +304,17 @@ $("otra-persona").addEventListener("click", () => {
   actualizarVisibilidad();
   $("resultado").hidden = true;
   form.hidden = false;
-  window.scrollTo(0, 0);
+  mostrarPaso(0);
 });
+
+$("atras").addEventListener("click", () => mostrarPaso(pasoActual - 1));
 
 $("descargar").addEventListener("click", descargar);
 $("borrar").addEventListener("click", borrar);
 
 $("lista-sintomas").append(...SINTOMAS_ALARMA.map((s) => crear("li", s)));
 actualizarVisibilidad();
+mostrarPaso(0, false);
 actualizarConteo();
 
 try {

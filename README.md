@@ -12,6 +12,9 @@ Este cuestionario NO diagnostica. Debe validarse con el asesor médico antes de 
 La página calcula todo en el navegador con los coeficientes de `web/modelo.json`. Los registros
 se guardan solo en el dispositivo y se descargan como CSV (mismas columnas que `registro_campo.csv`).
 
+El diseño está en `web/estilos.css` y sigue el sistema de `prueba'diseno/DESIGN.md`. Las fuentes y
+los íconos están en `web/fuentes/` para que la página no dependa de internet.
+
 Probarla en la computadora:
 
 ```
