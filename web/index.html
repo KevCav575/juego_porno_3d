@@ -13,6 +13,10 @@
 <header class="barra">
   <div class="ancho">
     <a class="marca" href="#"><img src="icono.svg" alt="" width="32" height="32">CardioGlucoCheck</a>
+    <nav class="menu" aria-label="Secciones">
+      <a href="#campana">La campaña</a>
+      <a href="#evaluador">Cuestionario</a>
+    </nav>
     <a class="boton" href="#evaluador">Comenzar</a>
   </div>
 </header>
@@ -26,7 +30,10 @@
         <h1>Evalúe el riesgo de <span class="azul">Hipertensión</span> y <span class="teal">Diabetes</span> en pocos minutos</h1>
         <p class="entrada">Un cuestionario corto para promotores de salud: unas preguntas, cinta métrica, glucómetro
           y baumanómetro. Al terminar muestra el nivel de riesgo de la persona y qué hacer.</p>
-        <a class="boton grande" href="#evaluador">Comenzar evaluación<span class="icono" aria-hidden="true">arrow_downward</span></a>
+        <div class="botones">
+          <a class="boton grande" href="#evaluador">Comenzar evaluación<span class="icono" aria-hidden="true">arrow_downward</span></a>
+          <a class="boton grande suave" href="#campana">Conocer la campaña</a>
+        </div>
         <ul class="confianza">
           <li><span class="icono" aria-hidden="true">no_accounts</span>Sin cuenta ni registro en línea</li>
           <li><span class="icono" aria-hidden="true">lock</span>Los datos se quedan en este dispositivo</li>
@@ -41,6 +48,42 @@
         </div>
         <p class="nota">Prototipo: debe validarse con el asesor médico antes de usarse con personas reales.</p>
       </aside>
+    </div>
+  </section>
+
+  <!-- ============ Campaña ============
+       EDITAR: todo lo que dice "Por definir" son datos de la campaña que faltan. -->
+  <section class="campana" id="campana">
+    <div class="ancho">
+      <p class="sobretitulo">Campaña comunitaria de salud</p>
+      <h2>Detectar a tiempo la diabetes y la presión alta</h2>
+      <p class="entrada">Médicos y gente de la comunidad se unen para medir el riesgo de diabetes e
+        hipertensión y orientar a quien lo necesite hacia su centro de salud.</p>
+
+      <div class="rejilla-3">
+        <article class="tarjeta dato">
+          <span class="icono" aria-hidden="true">event</span>
+          <h3>Cuándo</h3>
+          <p>Por definir</p>
+        </article>
+        <article class="tarjeta dato">
+          <span class="icono" aria-hidden="true">location_on</span>
+          <h3>Dónde</h3>
+          <p>Por definir</p>
+        </article>
+        <article class="tarjeta dato">
+          <span class="icono" aria-hidden="true">groups</span>
+          <h3>Quiénes participan</h3>
+          <p>Por definir</p>
+        </article>
+      </div>
+
+      <h3 class="subtitulo">Cómo funciona</h3>
+      <ol class="rejilla-3 pasos-campana">
+        <li><b>Responda el cuestionario</b>Unas preguntas sobre edad, actividad física y antecedentes.</li>
+        <li><b>Le tomamos medidas</b>Estatura, cintura, glucosa con glucómetro y presión arterial.</li>
+        <li><b>Recibe su resultado</b>Su nivel de riesgo y, si hace falta, la referencia a su centro de salud.</li>
+      </ol>
     </div>
   </section>
 

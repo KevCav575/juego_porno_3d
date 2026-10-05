@@ -91,6 +91,9 @@ p { margin: 0; }
 }
 .marca img { border-radius: 8px; }
 .barra .boton { min-height: 40px; padding: 8px 20px; }
+.menu { display: none; gap: 4px; margin-right: auto; }
+.menu a { padding: 8px 12px; border-radius: 8px; color: var(--tenue); font-size: .875rem; font-weight: 600; text-decoration: none; }
+.menu a:hover { background: var(--cont); color: var(--texto); }
 
 /* ---------- Portada ---------- */
 .portada { position: relative; overflow: hidden; padding: 48px 0 56px; }
@@ -121,6 +124,26 @@ p { margin: 0; }
 .cifras { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 24px; }
 .cifras p { background: var(--cont-bajo); border-radius: 12px; padding: 16px; font-size: .875rem; color: var(--tenue); }
 .cifras b { display: block; font: 700 1.5rem/1.33 var(--titulos); }
+
+/* ---------- Campaña ---------- */
+.campana { padding: 48px 0 56px; background: var(--blanco); }
+.campana h2 { font-size: 1.75rem; margin: 8px 0 12px; }
+.rejilla-3 { display: grid; gap: 16px; margin: 0; padding: 0; list-style: none; }
+.dato { background: var(--cont-bajo); box-shadow: var(--sombra-1); }
+.dato .icono {
+  width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; margin-bottom: 12px;
+  background: var(--primario-suave); color: var(--primario-oscuro); font-size: 1.4rem;
+}
+.dato h3, .subtitulo { font-size: 1.125rem; font-weight: 600; }
+.dato p { color: var(--tenue); margin-top: 4px; }
+.subtitulo { margin: 40px 0 16px; }
+.pasos-campana { counter-reset: paso; }
+.pasos-campana li { counter-increment: paso; position: relative; padding-left: 52px; color: var(--tenue); font-size: .9rem; }
+.pasos-campana li::before {
+  content: counter(paso); position: absolute; left: 0; top: 0; width: 36px; height: 36px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--secundario); color: #fff; font: 700 1rem var(--titulos);
+}
+.pasos-campana b { display: block; color: var(--texto); font-size: 1rem; }
 
 /* ---------- Evaluador ---------- */
 .evaluador { background: var(--cont-bajo); padding: 48px 0 64px; }
@@ -246,7 +269,9 @@ input[type="text"]:focus { outline: 0; border-color: var(--primario); box-shadow
 /* ---------- Pantallas anchas ---------- */
 @media (min-width: 640px) {
   .tarjeta.principal { padding: 40px; }
-  .confianza { grid-template-columns: repeat(3, 1fr); }
+  .confianza, .rejilla-3 { grid-template-columns: repeat(3, 1fr); }
+  .rejilla-3 { gap: 24px; }
+  .menu { display: flex; }
   .resultado-rejilla { grid-template-columns: 1fr 1fr; }
 }
 @media (min-width: 1024px) {
